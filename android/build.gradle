@@ -1,0 +1,59 @@
+group = "co.com.gse.gse_plugin_dibujo_firma"
+version = "1.0"
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.3.0")
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+
+android {
+    if (project.android.hasProperty("namespace")) {
+        namespace = "co.com.gse.gse_plugin_dibujo_firma"
+    }
+
+    compileSdk = 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdk = 21
+    }
+
+    dependencies {
+        testImplementation("junit:junit:4.13.2")
+        testImplementation("org.mockito:mockito-core:5.0.0")
+    }
+
+    testOptions {
+        unitTests.all {
+            testLogging {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+               outputs.upToDateWhen {false}
+               showStandardStreams = true
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.tom-roush:pdfbox-android:2.0.27.0'
+    implementation 'com.github.barteksc:pdfium-android:1.9.0'
+}
