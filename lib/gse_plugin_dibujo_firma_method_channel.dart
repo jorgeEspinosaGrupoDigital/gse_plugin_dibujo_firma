@@ -21,6 +21,7 @@ class MethodChannelGsePluginDibujoFirma {
     await doc;
     final arguments = {"page":page};
     final imgData = await methodChannel.invokeMethod<Uint8List>('renderPage',arguments);
+    closeDocument();
     return imgData;
   }
 
