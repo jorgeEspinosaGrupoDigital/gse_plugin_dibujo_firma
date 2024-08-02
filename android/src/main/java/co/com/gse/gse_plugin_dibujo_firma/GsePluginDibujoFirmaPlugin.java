@@ -73,14 +73,9 @@ public class GsePluginDibujoFirmaPlugin implements FlutterPlugin, MethodCallHand
       case "renderPage":
         Integer page = call.argument("page");
         PdfDocument docu = this.doc;
-        Thread a = new Thread(){
-          public void run(){
-            byte[] resultado = renderPage(page.intValue(),docu);
-            result.success(resultado);
-            System.out.println("Pasa retornar bytes " + page);
-          }
-        };
-        a.start();
+        byte[] resultado = renderPage(page.intValue(),docu);
+        result.success(resultado);
+        System.out.println("Pasa retornar bytes " + page);
         break;
       default:
         result.notImplemented();

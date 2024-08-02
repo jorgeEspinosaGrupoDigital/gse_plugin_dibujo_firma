@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:gse_plugin_dibujo_firma/entity/pdf_file_path.dart';
@@ -15,18 +17,20 @@ class MethodChannelGsePluginDibujoFirma {
     return version;
   }
 
-  static Future<Uint8List?> getPage({required int page}) async {
-    final imgData = await methodChannel.invokeMethod<Uint8List>('getPage');
+  static Future<Uint8List?> getPage({required int page, required Future<bool?> doc}) async {
+    await doc;
+    final arguments = {"page":page};
+    final imgData = await methodChannel.invokeMethod<Uint8List>('renderPage',arguments);
     return imgData;
   }
 
   static Future<bool?> loadDocument(PdfFilePath doc) async {
     final Uint8List bytes = await doc.getDocumentData();
     final arguments = {"data":bytes};
-    return await methodChannel.invokeMethod<bool>("loadDoc",arguments);
+    return await methodChannel.invokeMethod<bool>("loadDocument",arguments);
   }
 
   static void closeDocument(){
-    methodChannel.invokeMethod("closeDoc");
+    methodChannel.invokeMethod("closeDocument");
   }
 }

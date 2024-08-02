@@ -46,14 +46,21 @@ class GsePluginDibujoFirma extends StatefulWidget{
 
   final String path;
   final int page;
+  final void Function(Map<String, Object>?) onSignResult;
   late final Future<bool?> loadedDoc;
   late final PdfFilePath doc;
   late final Future<Uint8List?> imgData;
+  late final Uint8List docData;
 
-  GsePluginDibujoFirma({required this.path, required this.page}){
+  GsePluginDibujoFirma({required this.path, required this.page, required this.onSignResult}) {
     doc = PdfFilePath(path: path);
     loadedDoc = MethodChannelGsePluginDibujoFirma.loadDocument(doc);
-    imgData = MethodChannelGsePluginDibujoFirma.getPage(page: page);
+    imgData = MethodChannelGsePluginDibujoFirma.getPage(page: page, doc: loadedDoc);
+    asignarBytes();
+  }
+
+  void asignarBytes() async {
+    docData = await doc.getDocumentData();
   }
 
   @override
@@ -132,13 +139,24 @@ class _pluginDibujoFirma extends State<GsePluginDibujoFirma> {
   void retornarInfoFirma() {
     Size relativeOrigin = getRelativeSize(_x, _y);
     Size relativeSize = getRelativeSize(_w, _h + desfase);
-    InfoSign infoSign = InfoSign(page: widget.page, relativeX: (relativeOrigin.width), relativeY: relativeOrigin.height, relativeW: relativeSize.width, relativeH: relativeSize.height, docHeight: _heightDoc, docWidth: _widthDoc);
-    Navigator.pop(context,infoSign);
+    final result = {
+      "page" : widget.page,
+      "relativeX": (relativeOrigin.width),
+      "relativeY": relativeOrigin.height,
+      "relativeW": relativeSize.width,
+      "relativeH": relativeSize.height,
+      "docHeight": _heightDoc,
+      "docWidth": _widthDoc,
+      "docData": widget.docData
+    };
+    //InfoSign infoSign = InfoSign(page: widget.page, relativeX: (relativeOrigin.width), relativeY: relativeOrigin.height, relativeW: relativeSize.width, relativeH: relativeSize.height, docHeight: _heightDoc, docWidth: _widthDoc);
+    widget.onSignResult(result);
   }
 
   void cancelarFirma() {
     setState(() {
       state = SignState.signing;
+      _drawingSign = false;
       _x = -1;
       _y = -1;
       _w = 0;
@@ -421,7 +439,7 @@ class _pluginDibujoFirma extends State<GsePluginDibujoFirma> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Firma'),
+        title: const Text(''),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: floatingButton(),
@@ -460,6 +478,8 @@ class _pluginDibujoFirma extends State<GsePluginDibujoFirma> {
                       onVerticalDragEnd: getDragEnd(context),
                       onHorizontalDragEnd: getDragEnd(context),
                       child: Stack(
+                        fit: StackFit.expand,
+                        alignment: AlignmentDirectional.center,
                         children: [
                           PdfImageWidget(imgData: widget.imgData, imgKey: GlobalKey(),),
                           Positioned(
