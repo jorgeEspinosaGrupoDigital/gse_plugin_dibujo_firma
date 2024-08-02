@@ -438,9 +438,7 @@ class _pluginDibujoFirma extends State<GsePluginDibujoFirma> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(''),
-      ),
+      appBar: null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: floatingButton(),
       body: FutureBuilder(
