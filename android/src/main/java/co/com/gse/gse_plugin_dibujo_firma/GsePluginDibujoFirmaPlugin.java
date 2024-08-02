@@ -22,15 +22,9 @@ import androidx.annotation.NonNull;
 
 
 import com.shockwave.pdfium.PdfiumCore;
-import com.tom_roush.pdfbox.android.PDFBoxResourceLoader;
-import com.tom_roush.pdfbox.pdmodel.PDDocument;
-import com.tom_roush.pdfbox.rendering.PDFRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import com.shockwave.pdfium.PdfDocument;
 
 /** GsePluginDibujoFirmaPlugin */
@@ -92,42 +86,42 @@ public class GsePluginDibujoFirmaPlugin implements FlutterPlugin, MethodCallHand
     if(this.core == null){
       this.core = new PdfiumCore(ctx);
     }
-    System.out.println("Antes de newDococument");
+    //System.out.println("Antes de newDococument");
     this.doc = this.core.newDocument(dataDoc);
-    System.out.println("Después de newDococument");
+    //System.out.println("Después de newDococument");
   }
 
   public void closeDoc(){
     if(this.doc != null){
-      System.out.println("Antes de closeDococument");
+      //System.out.println("Antes de closeDococument");
       this.core.closeDocument(this.doc);
-      System.out.println("Después de closeDococument");
+      //System.out.println("Después de closeDococument");
     }
   }
 
   public byte[] renderPage(int page, PdfDocument docu) {
     try{
-      System.out.println("aja ._." + page);
+      //System.out.println("aja ._." + page);
       this.core.openPage(docu, page);
-      System.out.println("Pasa abrir página " + page);
+      //System.out.println("Pasa abrir página " + page);
       int width = this.core.getPageWidthPoint(docu, page) * 3;
       int height = this.core.getPageHeightPoint(docu, page) * 3;
-      System.out.println("Pasa calcular tamaños " + page);
+      //System.out.println("Pasa calcular tamaños " + page);
 
       // ARGB_8888 - best quality, high memory usage, higher possibility of OutOfMemoryError
       // RGB_565 - little worse quality, twice less memory usage
       Bitmap bitmap = Bitmap.createBitmap(width , height ,
               Bitmap.Config.RGB_565);
-      System.out.println("Pasa crear bitmap " + page);
+      //System.out.println("Pasa crear bitmap " + page);
       this.core.renderPageBitmap(docu, bitmap, page, 0, 0,
               width, height, true);
-      System.out.println("Pasa renderizar " + page);
+      //System.out.println("Pasa renderizar " + page);
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      System.out.println("Pasa crear bytes " + page);
+      //System.out.println("Pasa crear bytes " + page);
       bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-      System.out.println("Pasa llenar bytes  " + page);
+      //System.out.println("Pasa llenar bytes  " + page);
       byte[] byteArray = byteArrayOutputStream .toByteArray();
-      System.out.println("Pasa convertir a array " + page);
+      //System.out.println("Pasa convertir a array " + page);
       return byteArray;
     }catch(Exception e){
       return new byte[]{};
