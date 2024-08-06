@@ -118,6 +118,12 @@ class _pluginDibujoFirma extends State<GsePluginDibujoFirma> {
     pdfDocument.dispose();
   }
 
+  @override
+  void dispose() {
+    MethodChannelGsePluginDibujoFirma.closeDocument();
+    super.dispose();
+  }
+
   void iniciarFirmado() {
     final Size sizeContainer = getSizeContainer();
     realW = sizeContainer.width;
@@ -140,13 +146,13 @@ class _pluginDibujoFirma extends State<GsePluginDibujoFirma> {
     Size relativeOrigin = getRelativeSize(_x, _y);
     Size relativeSize = getRelativeSize(_w, _h + desfase);
     final result = {
-      "page" : widget.page,
-      "relativeX": (relativeOrigin.width * _widthDoc),
-      "relativeY": relativeOrigin.height * _heightDoc,
-      "relativeW": relativeSize.width * _widthDoc,
-      "relativeH": relativeSize.height * _heightDoc,
-      "docHeight": _heightDoc,
-      "docWidth": _widthDoc,
+      "pagina" : widget.page,
+      "x": (relativeOrigin.width * _widthDoc),
+      "y": relativeOrigin.height * _heightDoc,
+      "ancho": relativeSize.width * _widthDoc,
+      "alto": relativeSize.height * _heightDoc,
+      "altoDoc": _heightDoc,
+      "anchoDoc": _widthDoc,
       "docData": widget.docData
     };
     //InfoSign infoSign = InfoSign(page: widget.page, relativeX: (relativeOrigin.width), relativeY: relativeOrigin.height, relativeW: relativeSize.width, relativeH: relativeSize.height, docHeight: _heightDoc, docWidth: _widthDoc);

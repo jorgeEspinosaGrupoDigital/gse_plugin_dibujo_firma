@@ -40,6 +40,8 @@ public class GsePluginDibujoFirmaPlugin implements FlutterPlugin, MethodCallHand
   private PdfDocument doc = null;
   private PdfiumCore core = null;
 
+  private Thread hilo = null;
+
   private Context ctx = null;
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -67,9 +69,14 @@ public class GsePluginDibujoFirmaPlugin implements FlutterPlugin, MethodCallHand
       case "renderPage":
         Integer page = call.argument("page");
         PdfDocument docu = this.doc;
-        byte[] resultado = renderPage(page.intValue(),docu);
-        result.success(resultado);
-        System.out.println("Pasa retornar bytes " + page);
+        hilo = new Thread(){
+          public void run(){
+            byte[] resultado = renderPage(page.intValue(),docu);
+            result.success(resultado);
+            //System.out.println("Pasa retornar bytes " + page);
+          }
+        };
+        hilo.start();
         break;
       default:
         result.notImplemented();
@@ -93,6 +100,9 @@ public class GsePluginDibujoFirmaPlugin implements FlutterPlugin, MethodCallHand
 
   public void closeDoc(){
     if(this.doc != null){
+      if(hilo.isAlive()){
+        hilo.interrupt();
+      }
       //System.out.println("Antes de closeDococument");
       this.core.closeDocument(this.doc);
       //System.out.println("Después de closeDococument");
