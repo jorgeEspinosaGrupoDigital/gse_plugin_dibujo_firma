@@ -141,10 +141,10 @@ class _pluginDibujoFirma extends State<GsePluginDibujoFirma> {
     Size relativeSize = getRelativeSize(_w, _h + desfase);
     final result = {
       "page" : widget.page,
-      "relativeX": (relativeOrigin.width),
-      "relativeY": relativeOrigin.height,
-      "relativeW": relativeSize.width,
-      "relativeH": relativeSize.height,
+      "relativeX": (relativeOrigin.width * _widthDoc),
+      "relativeY": relativeOrigin.height * _heightDoc,
+      "relativeW": relativeSize.width * _widthDoc,
+      "relativeH": relativeSize.height * _heightDoc,
       "docHeight": _heightDoc,
       "docWidth": _widthDoc,
       "docData": widget.docData
